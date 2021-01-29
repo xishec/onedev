@@ -1,0 +1,1 @@
+web: cd server-product; mvn exec:java -Dexec.mainClass="io.onedev.commons.launcher.bootstrap.Bootstrap"
