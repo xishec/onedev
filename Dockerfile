@@ -18,7 +18,7 @@ RUN apt-get update && \
     maven
 # RUN mvn install -DskipTests=true -Dmaven.javadoc.skip=true
 # RUN cd server-product; mvn exec:java -Dexec.mainClass="io.onedev.commons.launcher.bootstrap.Bootstrap"
-CMD echo "Hello world"
+CMD ls server-product;
 # COPY . .
 # RUN mvn exec:java -Dexec.mainClass="io.onedev.commons.launcher.bootstrap.Bootstrap"
 
