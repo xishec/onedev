@@ -12,9 +12,9 @@ deploy:
   provider: heroku
   api_key:
     secure: "c5ef4eee-8e09-4a01-a97b-793bb80e3b18"
-    run:
-      - "cd server-product"
-			- "mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
+  run:
+    - "cd server-product"
+    - "mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
   on:
     all_branches: true
 
