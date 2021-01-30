@@ -17,5 +17,3 @@ deploy:
 	run:
 		- "cd server-product"
 		- "mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
-
-script: echo "Success!"
