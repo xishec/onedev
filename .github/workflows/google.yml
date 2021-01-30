@@ -1,0 +1,79 @@
+# This workflow will build a docker container, publish it to Google Container Registry, and deploy it to GKE when a release is created
+#
+# To configure this workflow:
+#
+# 1. Ensure that your repository contains the necessary configuration for your Google Kubernetes Engine cluster, including deployment.yml, kustomization.yml, service.yml, etc.
+#
+# 2. Set up secrets in your workspace: GKE_PROJECT with the name of the project and GKE_SA_KEY with the Base64 encoded JSON service account key (https://github.com/GoogleCloudPlatform/github-actions/tree/docs/service-account-key/setup-gcloud#inputs).
+#
+# 3. Change the values for the GKE_ZONE, GKE_CLUSTER, IMAGE, and DEPLOYMENT_NAME environment variables (below).
+#
+# For more support on how to run the workflow, please visit https://github.com/google-github-actions/setup-gcloud/tree/master/example-workflows/gke
+
+name: Build and Deploy to GKE
+
+on:
+  release:
+    types: [created]
+
+env:
+  PROJECT_ID: quality-onedev
+  GKE_CLUSTER: onedev-cluster    # TODO: update to cluster name
+  GKE_ZONE: us-central1-a   # TODO: update to cluster zone
+  DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
+  IMAGE: static-site
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Setup gcloud CLI
+    - uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsCiAgInByb2plY3RfaWQiOiAicXVhbGl0eS1v bmVkZXYiLAogICJwcml2YXRlX2tleV9pZCI6ICJjYzQ0OWEwZThkNzhiMzQyZDhkMzc5N2ZhYjhl ZjIzODYxMDg2MTZlIiwKICAicHJpdmF0ZV9rZXki OiAiLS0tLS1CRUdJTiBQUklWQVRFIEtFWS0t LS0tXG5NSUlFdkFJQkFEQU5CZ2txaGtpRzl3MEJBUUVGQUFTQ0JLWXdnZ1NpQWdFQUFvSUJBUUN0 ZlZnQnpFZ2tGRGdtXG4vNmVmR1V0cmMyWmplTGVMeFJ4dmR1aVFQYmF5d2swbDJHQUIzb1R4dG1o R2x WVXNvOWk3V3B6VXk2MzExcDE3XG55Y1lCSDA4R3I1TnB6NUxHVndsdkhTVVVqWWNxWnBuR0xM QjlZUkg4UEp2T3NzV3R3TzRPTUJ4Z0hFaFRGaHZ0XG5GdVFhZDNvVUdid1Q1aU1zMWdxRmk5YzdC RUVqNkZCWHFkK0RXaU1NUVhoaW1hbVQvd0I5V01mZTZ IZ0I5dXhsXG5YTU5vMlFSa1hXY0FQcEN1 aXRhSHlsdnV2RXBFbWYzTzlyL0dzQ1VLZGJGMU9iOVBCUzZtd1ZhY3EzOXQxMy9DXG5RMXV0UUJI cGlnbXlPRCtUa05oMldQQXNIQlFMSEpYeXNoK1RTSEI4ZmNqTG8rVDBSM2RRUGhaQlV1bk41dHZy XG5sTD JqYVZMakFnTUJBQUVDZ2dFQUkwRmpqd242WndxTTFyQUJXajJEckJSSmJGRnR5ME9GSWNt aVBSMnRjT28zXG5UMGVIU3huekhrT1pNUzdMbmtTMW1HMHpqYkxPYVRUeHorUVREc3RUL2VIVUxS NTNqMExFc2dYVU1UY0pqcjVHXG41WlRUVU1kWEpsRVN3Sk JueDRWN1d2cS82WEFWNm55RnRFcUFs RGhQWUtKU0xDRUthT1FlUTBGRnZjS0JrbEFmXG5OK1UxNW9Ub3RDcWxjU21rOVVLcFFzQjMwL2xr dmFqWlMxajVYWXNjVjByR1A4Szk1OFpnK2Z6RWZlaHFMS3h5XG5TSkhNeGRhTlJtWEl4R2VTT0wy NlJ2Zy9JT 3ZDK2dXYkFialZuY0lKWnBNSVJDR0ppQ1lzVWRMS25jUXVvQU0wXG5yU0lvTG45WE1q bVhtRldLRXNUekMvaFIzOHM2Nmh5TUU5ZGNYMXN2OFFLQmdRRHN1Y0p0ZW9nc0tRc013UTM0XG5H dDhteDhEQytscHZPdFVycFBUZFFpbzROVjh0ZVo2alBxS3BtQ 2xlUmpabEVZNWpnRHVQQndTNHoz K3ZnQ2dUXG50YnNiaEFRUkJvR2R6bXFRRFA4d2dnVG1aZEtQZjRVUTllY0l1a2srMlVqS1A3Qm5O L1NuZlVRZVNEVmlZc1NTXG5iWlBIVlNOMFQvQWp3NFVnTGp1UUcyQmtUUUtCZ1FDN25ZTHE4bHBx OStoMmpZaW5Z aVJnZDdRd0JNazVnVCtIXG5ZNWlyeUdpUDd3bjFnZjRMbXh6ZU85U0pDMFRPdy9m UzlHeVZxL1h4MkJtOUJmQ0U5Tk4wYkxJbzJLZXNPbGd4XG45ZHNKVTVxdWUzRmduRHVxWDdKcCtR MElGTmFDa3E2anE1TzdXYzJlOG4xWFYwZ1RNOStZSUxieklvamxp ZjBMXG5XYUtHZWozcjd3S0Jn R3JVeWpHdUFwWXJUNWxKNW92NVZJdWp5aEl6K1d3SkdQckJUdUFyWS9KSjQ5SVorTVdqXG5GcldD dmVpVnR5YVZiYlRwd2ZjaUs3ZGJyVHYra2hlVEJBVys1amJvd01YK3lZaUkxUUdISzc3dVpML3R4 SmVLXG40ZURHY1J lejUyMmVvSFYwZ3l5ekUzSzNFNkI3QWtzeXVHWlV2ZE5YMy8vRDFPaFk5UGhy NG14aEFvR0FmRGVTXG5XWG95Y1VaSUxFNFRIemUwZkFabFQ3R3JoUjVVOEkvNW9pcmpTQUR0S0Ja MEhEMEx4UHY2QU81c0ZUWGNuRmhtXG5tRVl0WlgwOXRVLzhhaHNxOFp lUjhjZFlaSWlRb2l0MFpW MXNPWC9UbGpKNnNwZi9xWGhTcjNvVWVJa2poWXZ4XG5HUWNoUTg2clBDdTJ0YmdQbjBweHR0S3py cjVJd3I0TEJGeGxLUk1DZ1lBaVF6Vk5TcHV1ZTdlQUhvV0o2dDFGXG5ud3RxVVY5aUlYV3dGK3Vx eUFVNkxHRzNyZU12U0 NGYU5YdjlqQU44SzVoVEllL21SRTZ0bEkzbGhoT0dGSTZxXG5tMmZBSExN ZWdEVm1vVHh0N08rSGcrMVhYMWJ3SG9BR1NweUxzVkZ2RjdYQi9ZSGR6NTR0cjR1aTYxN2d5eTdW XG5ia3kvK2p2V0ZMQ0ZlalFhNUIreHV3PT1cbi0tLS0tRU5EIFBSSVZBVE UgS0VZLS0tLS1cbiIs CiAgImNsaWVudF9lbWFpbCI6ICJ4aXNoZWNAcXVhbGl0eS1vbmVkZXYuaWFtLmdzZXJ2aWNlYWNj b3VudC5jb20iLAogICJjbGllbnRfaWQiOiAiMTAxOTYzNzU1NTEzNDU0ODIxMTg3IiwKICAiYXV0 aF91cmkiOiAiaHR0cHM6L y9hY2NvdW50cy5nb29nbGUuY29tL28vb2F1dGgyL2F1dGgiLAogICJ0 b2tlbl91cmkiOiAiaHR0cHM6Ly9vYXV0aDIuZ29vZ2xlYXBpcy5jb20vdG9rZW4iLAogICJhdXRo X3Byb3ZpZGVyX3g1MDlfY2VydF91cmwiOiAiaHR0cHM6Ly93d3cuZ29vZ2xlY XBpcy5jb20vb2F1 dGgyL3YxL2NlcnRzIiwKICAiY2xpZW50X3g1MDlfY2VydF91cmwiOiAiaHR0cHM6Ly93d3cuZ29v Z2xlYXBpcy5jb20vcm9ib3QvdjEvbWV0YWRhdGEveDUwOS94aXNoZWMlNDBxdWFsaXR5LW9uZWRl di5pYW0uZ3NlcnZpY2VhY2Nv dW50LmNvbSIKfQo=
+        project_id: quality-onedev
+
+    # Configure Docker to use the gcloud command-line tool as a credential
+    # helper for authentication
+    - run: |-
+        gcloud --quiet auth configure-docker
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - uses: google-github-actions/get-gke-credentials@v0.2.1
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+        credentials: ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsCiAgInByb2plY3RfaWQiOiAicXVhbGl0eS1v bmVkZXYiLAogICJwcml2YXRlX2tleV9pZCI6ICJjYzQ0OWEwZThkNzhiMzQyZDhkMzc5N2ZhYjhl ZjIzODYxMDg2MTZlIiwKICAicHJpdmF0ZV9rZXki OiAiLS0tLS1CRUdJTiBQUklWQVRFIEtFWS0t LS0tXG5NSUlFdkFJQkFEQU5CZ2txaGtpRzl3MEJBUUVGQUFTQ0JLWXdnZ1NpQWdFQUFvSUJBUUN0 ZlZnQnpFZ2tGRGdtXG4vNmVmR1V0cmMyWmplTGVMeFJ4dmR1aVFQYmF5d2swbDJHQUIzb1R4dG1o R2x WVXNvOWk3V3B6VXk2MzExcDE3XG55Y1lCSDA4R3I1TnB6NUxHVndsdkhTVVVqWWNxWnBuR0xM QjlZUkg4UEp2T3NzV3R3TzRPTUJ4Z0hFaFRGaHZ0XG5GdVFhZDNvVUdid1Q1aU1zMWdxRmk5YzdC RUVqNkZCWHFkK0RXaU1NUVhoaW1hbVQvd0I5V01mZTZ IZ0I5dXhsXG5YTU5vMlFSa1hXY0FQcEN1 aXRhSHlsdnV2RXBFbWYzTzlyL0dzQ1VLZGJGMU9iOVBCUzZtd1ZhY3EzOXQxMy9DXG5RMXV0UUJI cGlnbXlPRCtUa05oMldQQXNIQlFMSEpYeXNoK1RTSEI4ZmNqTG8rVDBSM2RRUGhaQlV1bk41dHZy XG5sTD JqYVZMakFnTUJBQUVDZ2dFQUkwRmpqd242WndxTTFyQUJXajJEckJSSmJGRnR5ME9GSWNt aVBSMnRjT28zXG5UMGVIU3huekhrT1pNUzdMbmtTMW1HMHpqYkxPYVRUeHorUVREc3RUL2VIVUxS NTNqMExFc2dYVU1UY0pqcjVHXG41WlRUVU1kWEpsRVN3Sk JueDRWN1d2cS82WEFWNm55RnRFcUFs RGhQWUtKU0xDRUthT1FlUTBGRnZjS0JrbEFmXG5OK1UxNW9Ub3RDcWxjU21rOVVLcFFzQjMwL2xr dmFqWlMxajVYWXNjVjByR1A4Szk1OFpnK2Z6RWZlaHFMS3h5XG5TSkhNeGRhTlJtWEl4R2VTT0wy NlJ2Zy9JT 3ZDK2dXYkFialZuY0lKWnBNSVJDR0ppQ1lzVWRMS25jUXVvQU0wXG5yU0lvTG45WE1q bVhtRldLRXNUekMvaFIzOHM2Nmh5TUU5ZGNYMXN2OFFLQmdRRHN1Y0p0ZW9nc0tRc013UTM0XG5H dDhteDhEQytscHZPdFVycFBUZFFpbzROVjh0ZVo2alBxS3BtQ 2xlUmpabEVZNWpnRHVQQndTNHoz K3ZnQ2dUXG50YnNiaEFRUkJvR2R6bXFRRFA4d2dnVG1aZEtQZjRVUTllY0l1a2srMlVqS1A3Qm5O L1NuZlVRZVNEVmlZc1NTXG5iWlBIVlNOMFQvQWp3NFVnTGp1UUcyQmtUUUtCZ1FDN25ZTHE4bHBx OStoMmpZaW5Z aVJnZDdRd0JNazVnVCtIXG5ZNWlyeUdpUDd3bjFnZjRMbXh6ZU85U0pDMFRPdy9m UzlHeVZxL1h4MkJtOUJmQ0U5Tk4wYkxJbzJLZXNPbGd4XG45ZHNKVTVxdWUzRmduRHVxWDdKcCtR MElGTmFDa3E2anE1TzdXYzJlOG4xWFYwZ1RNOStZSUxieklvamxp ZjBMXG5XYUtHZWozcjd3S0Jn R3JVeWpHdUFwWXJUNWxKNW92NVZJdWp5aEl6K1d3SkdQckJUdUFyWS9KSjQ5SVorTVdqXG5GcldD dmVpVnR5YVZiYlRwd2ZjaUs3ZGJyVHYra2hlVEJBVys1amJvd01YK3lZaUkxUUdISzc3dVpML3R4 SmVLXG40ZURHY1J lejUyMmVvSFYwZ3l5ekUzSzNFNkI3QWtzeXVHWlV2ZE5YMy8vRDFPaFk5UGhy NG14aEFvR0FmRGVTXG5XWG95Y1VaSUxFNFRIemUwZkFabFQ3R3JoUjVVOEkvNW9pcmpTQUR0S0Ja MEhEMEx4UHY2QU81c0ZUWGNuRmhtXG5tRVl0WlgwOXRVLzhhaHNxOFp lUjhjZFlaSWlRb2l0MFpW MXNPWC9UbGpKNnNwZi9xWGhTcjNvVWVJa2poWXZ4XG5HUWNoUTg2clBDdTJ0YmdQbjBweHR0S3py cjVJd3I0TEJGeGxLUk1DZ1lBaVF6Vk5TcHV1ZTdlQUhvV0o2dDFGXG5ud3RxVVY5aUlYV3dGK3Vx eUFVNkxHRzNyZU12U0 NGYU5YdjlqQU44SzVoVEllL21SRTZ0bEkzbGhoT0dGSTZxXG5tMmZBSExN ZWdEVm1vVHh0N08rSGcrMVhYMWJ3SG9BR1NweUxzVkZ2RjdYQi9ZSGR6NTR0cjR1aTYxN2d5eTdW XG5ia3kvK2p2V0ZMQ0ZlalFhNUIreHV3PT1cbi0tLS0tRU5EIFBSSVZBVE UgS0VZLS0tLS1cbiIs CiAgImNsaWVudF9lbWFpbCI6ICJ4aXNoZWNAcXVhbGl0eS1vbmVkZXYuaWFtLmdzZXJ2aWNlYWNj b3VudC5jb20iLAogICJjbGllbnRfaWQiOiAiMTAxOTYzNzU1NTEzNDU0ODIxMTg3IiwKICAiYXV0 aF91cmkiOiAiaHR0cHM6L y9hY2NvdW50cy5nb29nbGUuY29tL28vb2F1dGgyL2F1dGgiLAogICJ0 b2tlbl91cmkiOiAiaHR0cHM6Ly9vYXV0aDIuZ29vZ2xlYXBpcy5jb20vdG9rZW4iLAogICJhdXRo X3Byb3ZpZGVyX3g1MDlfY2VydF91cmwiOiAiaHR0cHM6Ly93d3cuZ29vZ2xlY XBpcy5jb20vb2F1 dGgyL3YxL2NlcnRzIiwKICAiY2xpZW50X3g1MDlfY2VydF91cmwiOiAiaHR0cHM6Ly93d3cuZ29v Z2xlYXBpcy5jb20vcm9ib3QvdjEvbWV0YWRhdGEveDUwOS94aXNoZWMlNDBxdWFsaXR5LW9uZWRl di5pYW0uZ3NlcnZpY2VhY2Nv dW50LmNvbSIKfQo=
+
+    # Build the Docker image
+    - name: Build
+      run: |-
+        docker build \
+          --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
+          --build-arg GITHUB_SHA="$GITHUB_SHA" \
+          --build-arg GITHUB_REF="$GITHUB_REF" \
+          .
+
+    # Push the Docker image to Google Container Registry
+    - name: Publish
+      run: |-
+        docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+
+#     # Set up kustomize
+#     - name: Set up Kustomize
+#       run: |-
+#         curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+#         chmod u+x ./kustomize
+
+    # Deploy the Docker image to the GKE cluster
+    - name: Deploy
+      run: |-
+        ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
+        ./kustomize build . | kubectl apply -f -
+        kubectl rollout status deployment/$DEPLOYMENT_NAME
+        kubectl get services -o wide
