@@ -16,8 +16,9 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     openjdk-11-jdk \
     maven
-RUN mvn install -DskipTests=true -Dmaven.javadoc.skip=true
-RUN cd server-product; mvn exec:java -Dexec.mainClass="io.onedev.commons.launcher.bootstrap.Bootstrap"
+# RUN mvn install -DskipTests=true -Dmaven.javadoc.skip=true
+# RUN cd server-product; mvn exec:java -Dexec.mainClass="io.onedev.commons.launcher.bootstrap.Bootstrap"
+CMD echo "Hello world"
 # COPY . .
 # RUN mvn exec:java -Dexec.mainClass="io.onedev.commons.launcher.bootstrap.Bootstrap"
 
