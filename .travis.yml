@@ -4,9 +4,12 @@ script: echo "Success!"
 deploy:
   provider: heroku
   api_key:
-    secure: V8/U8S6hmocD+lfKaKQt6kNQlqkYufdGn/sNPSwRYjtLrDv2cgnsW1PHBm3yttKeztJN3+QSiD6qP9M+oB+xznoYntha4av6LKyUOwoxu/athnT8zMKMehQ8Gtkz76fliB5v3I9reMffx1seWUEm5M8LWYm9yUZ1dyytvzAQueLOKfEqqkFeVjWw/z7bjjSc7KrXvoUuYFF++dhRp4WUesP7seesj/+z+txlGvC25jAdTG8FYs3P1DWU2A26ixadCWoOsgXCIuDc1RibbLYRZNtS1VJ0Z4XksfvVUMW6HHnCkjYsFJ+f2Sc9J7q2hsz+wUaYsWfeYzef/1cWFwOatbxJrS53vdVteN9mf0g9c+jL6R0RXasMKzP7BaIWx2n6X/HxweRHlfO4ZGJKO6/fGR6fyIawIHxXOlcGVKGThDgqqayRqzR6en+rHgwNBcTfaoeq39sdrJXGF0O+8HFzIRoGSJa05iuoEAseF7ibkFjXzCmhyyZNrXVq5SdfKCB0SPt3LCTolYoE6EKn8AIDT/xr6nUKUxlZIu8jaiqVjtemLLLFYM+/nY2id2HjS1lj+3RA6GHr1stM2AnOZGGrdtq8cIlj5tawGjWEqW8IVL/sQT2buVuWvv11j0oPbOmSHaIccsns6fENhwC8Nb/OaQh+7/TIb4crd03rPnSLfTI=
+    secure: nQYovmItDD5fUT32b/NhgFK++D8o3IKX2SSLY1y7UJf9+eYGkCThmMXGGY7qp7XjNzbOor+J1lrKp007/2/ne/EEL9eBQJWio3JRQop4MRhWnr5/lpxX5kGplj8OGeJIckzP9He8Mzny8p7tbgjq8dJ/AENp3xZIS39vfNE0SF7MAAdJ8t9kSEVE/8Zx7/MahZs7ISzyWcM/7XYHc6hqXFmS6ii52zUjzOdR+Arpbxn5pw8I+q9WO7MfoAUlaq/8bGBTo0MB01s//kotEPOVmkGg3l3uxHXokK8SDAb819ATQXz/hk1EpWPFDZaFvbJJ+f9cy+QJvxvyuhQmISuXlli5oxGU2/V9pw+DxoLrfvRsq1l2qI3UNlAHIqVt7RM1ZbPpo3x2H+PPUzQuopvj3Eiw2AgmO2IW1dCMH+I7K1dtXWU3bI0ZkfLNXdjl3eXNTb5eKtZlPphUC3SnRxbtK/Nw+ND4RXKCLIx+RIh8PEKDl8MiBiIiPO7b/WSZtFLiSPji48LtK8VzXiXLL435YmU5+B+BpFP3zTTKcvGmTfFkyOzQL1yvfOHM12AOaVXmb/fmxvRIiHOWFi3ZcVeVILi0+5EhtPyPuwkYlUG/0Z4NTLQwWzE5Zi/Eb0VVbNYFDIqsFpTzAwACKrjhOsKJep5MwuemwbP/CxSHxPpsbSI=
+  app: quality-onedev
   run:
-  - cd server-product
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - cd server-product
+    - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
   on:
-    all_branches: true
+    repo: xishec/onedev
+    branch: main
+  skip_cleanup: "true"
