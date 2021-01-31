@@ -78,4 +78,4 @@ jobs:
 #         kubectl rollout status deployment/$DEPLOYMENT_NAME
 #         kubectl get services -o wide
     - name: Deploy
-      run: kubectl set image "deployment/onedev onedev=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+      run: kubectl set image deployment/onedev onedev=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
