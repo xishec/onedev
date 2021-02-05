@@ -9,5 +9,3 @@ RUN apt-get update && \
     maven
 RUN mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true
 CMD cd server-product; mvn exec:java -Dexec.mainClass="io.onedev.commons.launcher.bootstrap.Bootstrap";
-
-# CMD echo "HI"
