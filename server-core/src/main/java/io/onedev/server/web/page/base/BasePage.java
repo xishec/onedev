@@ -264,7 +264,7 @@ public abstract class BasePage extends WebPage {
 	}
 	
 	protected final String getPageTitle() {
-		return "OneDev - Super Easy All-in-One DevOps Platform fds";
+		return "demo OneDev - Super Easy All-in-One DevOps Platform fds";
 	}
 
 	protected int getPageRefreshInterval() {
