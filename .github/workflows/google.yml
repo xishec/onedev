@@ -38,6 +38,7 @@ jobs:
       run: mvn test
   
   setup-build-publish-deploy:
+    needs: test
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
 
