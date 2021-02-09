@@ -10,7 +10,7 @@
 #
 # For more support on how to run the workflow, please visit https://github.com/google-github-actions/setup-gcloud/tree/master/example-workflows/gke
 
-name: Test, Build Docker and Deploy to GKE
+name: Test and Deploy
 
 on:
   release:
@@ -37,9 +37,9 @@ jobs:
     - name: Test with Maven
       run: mvn test
   
-  setup-build-publish-deploy:
+  deploy:
     needs: test
-    name: Setup, Build, Publish, and Deploy
+    name: Setup gcloud CLI, Build, Publish, and Deploy
     runs-on: ubuntu-latest
 
     steps:
