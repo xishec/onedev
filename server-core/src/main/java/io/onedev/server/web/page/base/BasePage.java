@@ -264,7 +264,7 @@ public abstract class BasePage extends WebPage {
 	}
 	
 	protected final String getPageTitle() {
-		return "OneDev v5.2.0";
+		return "OneDev v5.2.1";
 	}
 
 	protected int getPageRefreshInterval() {
