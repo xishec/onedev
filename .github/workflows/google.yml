@@ -39,7 +39,7 @@ jobs:
       run: mvn test
   
   deploy:
-#     needs: test
+    needs: test
     name: Setup gcloud CLI, Build, Publish, and Deploy
     runs-on: ubuntu-latest
 
