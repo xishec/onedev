@@ -20,7 +20,7 @@ on:
 env:
   PROJECT_ID: onedev-303821
   GKE_CLUSTER: onedev-cluster    # TODO: update to cluster name
-  GKE_ZONE: us-central1-a   # TODO: update to cluster zone
+  GKE_ZONE: us-west1-a   # TODO: update to cluster zone
   DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
   IMAGE: static-site
 
