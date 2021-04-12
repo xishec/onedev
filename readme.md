@@ -81,4 +81,4 @@ Configure issues to transit to desired state upon commit, build or pull request 
 
 Define permission schemes best suiting your development workflow. For instance, you may specify who can change particular source folder, who can assign issues, who can run release builds, or who can access build log, etc.
 
-![Role](doc/images/role.png)
+![Role](doc/images/role.png) :)

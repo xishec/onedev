@@ -1,7 +1,6 @@
 package io.onedev.server.web.page.base;
 
 import static org.apache.wicket.ajax.attributes.CallbackParameter.explicit;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
@@ -264,7 +263,7 @@ public abstract class BasePage extends WebPage {
 	}
 	
 	protected final String getPageTitle() {
-		return "OneDev plz";
+		return "OneDev v5.4.0";
 	}
 
 	protected int getPageRefreshInterval() {
